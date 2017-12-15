@@ -1,0 +1,44 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+  require_chef_omnibus: 13.4.19
+  chef_omnibus_url: http://omnitruck.chef.io/install.sh
+
+verifier:
+  name: inspec
+  format: junit
+  output: ./%{platform}_%{suite}_inspec.xml
+
+platforms:
+- name: ubuntu-14.04
+  driver:
+    customize:
+      memory: 384
+    run_list:
+      - recipe[apt]
+
+- name: ubuntu-16.04
+  driver:
+    customize:
+      memory: 2048
+    run_list:
+      - recipe[apt]
+
+suites:
+- name: default
+  run_list:
+    - recipe[apt]
+    - recipe[eclipse]
+  attributes:
+    java:
+      install_flavor: oracle
+      jdk_version: 8
+      oracle:
+        accept_oracle_download_terms: true
+    eclipse:
+      url: http://archive.eclipse.org/eclipse/downloads/drops4/R-4.4.2-201502041700/eclipse-SDK-4.4.2-linux-gtk-x86_64.tar.gz
+      checksum: 14a5f79fb9362993fb11ca616cde822bcfdd5daa20c3496c9d4ab91e3555003c
+      version: 4.4.2
