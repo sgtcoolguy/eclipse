@@ -23,6 +23,6 @@ end
 action_class do
   def installed?
     ius = shell_out("#{new_resource.binary} -application org.eclipse.equinox.p2.director -noSplash -listInstalledRoots 2>/dev/null").stdout.lines
-    ius.any? {|entry| entry.starts_with("#{new_resource.id}/") }
+    ius.any? {|entry| entry.start_with?("#{new_resource.id}/") }
   end
 end
